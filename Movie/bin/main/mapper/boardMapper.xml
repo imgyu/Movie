@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.board.mapper.BoardMapper">
+
+
+<select id="countBoard" resultType="int">
+
+SELECT COUNT(B_NO)
+FROM BOARD
+WHERE BT_NO  =  #{bt_no} 
+
+</select>
+
+<select id="boardList" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT * 
+FROM (
+SELECT ROWNUM RN, A.*
+FROM (
+SELECT B.B_NO,
+U.U_NICKNAME,
+B.B_TITLE,
+B.BT_NO,
+U.U_NO,
+TO_CHAR(B.B_WRITEDATE, 'YYYY-mm-dd') as B_WRITEDATE
+FROM BOARD B LEFT JOIN MUSER U ON B.U_NO  =  U.U_NO  
+WHERE B.BT_NO  =  #{bt_no}
+ORDER BY B.B_NO DESC
+  ) A 
+)
+WHERE RN BETWEEN #{pg.start} AND #{pg.end}
+</select>
+
+<select id="commentList" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT 
+U.U_NO,
+BC.BC_NO,
+B.B_NO,
+U.U_NICKNAME,
+U.U_PROFILEIMG,
+BC.BC_COMT,
+BC.BC_WRITEDATE
+FROM BOARD B LEFT JOIN MUSER U ON B.U_NO = U.U_NO LEFT JOIN
+BOARD_COMT BC ON B.B_NO = BC.B_NO
+WHERE B.B_NO  =  #{b_no}
+ORDER BY BC.BC_NO DESC
+</select>
+
+<insert id="writeComment">
+
+INSERT INTO BOARD_COMT (
+
+BC_NO,
+B_NO,
+U_NO,
+BC_COMT,
+BC_WRITEDATE
+) VALUES (
+(SELECT NVL(MAX(BC_NO), 0) + 1 FROM BOARD_COMT),
+#{b_no},
+#{u_no},
+#{bc_comt},
+SYSDATE
+)
+
+
+</insert>
+
+<update id="readCount">
+
+UPDATE BOARD
+SET B_READCOUNT  = (B_READCOUNT+1)
+WHERE B_NO  =  #{b_no}
+
+</update>
+
+<select id="boardDetail" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT 
+B.B_TITLE,
+B.B_CONTENT,
+U.U_NICKNAME,
+TO_CHAR(B.B_WRITEDATE, 'YYYY-mm-dd') as B_WRITEDATE,
+B.B_READCOUNT,
+U.U_PROFILEIMG,
+B.U_NO,
+BT.BT_NAME
+FROM BOARD B LEFT JOIN MUSER U ON B.U_NO = U.U_NO LEFT JOIN
+BOARDTYPE BT ON B.BT_NO = BT.BT_NO  
+WHERE B.B_NO  =  #{b_no}
+
+</select>
+
+<select id="findLike" resultType="int">
+
+SELECT COUNT(*)
+FROM BOARDLIKE
+WHERE B_NO = #{b_no}
+AND   U_NO = #{u_no}
+
+</select>
+
+<insert id="Like">
+
+INSERT INTO BOARDLIKE (B_NO, U_NO)
+VALUES(#{b_no}, #{u_no})
+
+
+</insert>
+
+<delete id="unLike">
+
+DELETE FROM BOARDLIKE
+WHERE B_NO = #{b_no}
+AND   U_NO  = #{u_no}
+
+</delete>
+
+<select id="findFav" resultType="int">
+
+SELECT COUNT(*)
+FROM BOARDFav
+WHERE B_NO = #{b_no}
+AND   U_NO = #{u_no}
+
+</select>
+
+<insert id="Fav">
+INSERT INTO BOARDFav (B_NO, U_NO)
+VALUES(#{b_no}, #{u_no})
+</insert>
+
+<delete id="unFav">
+
+DELETE FROM BOARDFav
+WHERE B_NO = #{b_no}
+AND   U_NO  = #{u_no}
+
+</delete>
+
+<insert id="testBoardInsert">
+
+INSERT INTO TEST_BOARD(
+TB_NO,
+U_NO,
+BT_NO,
+TB_TITLE,
+TB_CONTENT,
+TB_WRITEDATE
+) VALUES(
+(SELECT NVL(MAX(TB_NO), 0) +1 FROM TEST_BOARD),
+#{u_no},
+#{bt_no},
+#{b_title},
+#{b_content},
+SYSDATE
+)
+
+</insert>
+
+<select id="findTb_no" resultType="String">
+
+SELECT TB_NO
+FROM TEST_BOARD
+WHERE TB_CONTENT  =  #{b_content}
+
+</select>
+
+<select id="findb_no" resultType="String">
+
+SELECT B_NO
+FROM BOARD
+WHERE B_CONTENT  =  #{b_content}
+
+</select>
+
+<insert id="fileInsert">
+
+INSERT INTO TEST_BOARD_FILE (
+TB_NO,
+TB_FILE
+) VALUES (
+#{tb_no},
+#{b_file}
+)
+
+</insert>
+
+<insert id="BoardInsert">
+
+INSERT INTO BOARD(
+B_NO,
+U_NO,
+BT_NO,
+B_TITLE,
+B_CONTENT,
+B_WRITEDATE
+) VALUES(
+(SELECT NVL(MAX(B_NO), 0) +1 FROM BOARD),
+#{u_no},
+#{bt_no},
+#{b_title},
+#{b_content},
+SYSDATE
+)
+
+</insert>
+
+<insert id="fileInsert2">
+
+INSERT INTO BOARD_FILE (
+B_NO,
+B_FILE
+) VALUES (
+#{b_no},
+#{b_file}
+)
+
+</insert>
+	
+<select id="imgList" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT B_FILE
+FROM BOARD_FILE
+WHERE B_NO  =  #{b_no}
+
+</select>
+
+<select id="testBoardList" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT TB.*
+FROM TEST_BOARD TB
+WHERE TB.TB_NO  =  #{b_no}
+AND   U_NO  =  #{u_no}
+
+</select>
+
+<select id="testImgList" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT TB_FILE
+FROM TEST_BOARD_FILE
+WHERE TB_NO  =  #{b_no}
+
+</select>
+
+<delete id="deleteFileBoard">
+
+DELETE FROM BOARD_FILE
+WHERE B_NO  =  #{b_no} 
+
+</delete>
+
+<delete id="deleteBoard">
+
+DELETE FROM BOARD
+WHERE B_NO  =  #{b_no}
+AND   U_NO  =  #{u_no} 
+
+</delete>
+
+<select id="reWriteSel" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT B.*,
+BT.BT_NAME
+FROM BOARD B LEFT JOIN BOARDTYPE BT ON B.BT_NO = BT.BT_NO
+WHERE B.B_NO  =  #{b_no}
+AND   B.U_NO  =  #{u_no}
+
+</select>
+
+<select id="reWriteImg" resultType="com.movie.board.domain.BoardDTO">
+
+SELECT B_FILE
+FROM BOARD_FILE
+WHERE B_NO  =  #{b_no}
+
+</select>
+
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.user.mapper.UserMapper">
+
+<select id="login" resultType="com.movie.user.domain.UserDTO">
+
+SELECT U_NO, U_ID, U_PW, U_NAME, U_NICKNAME, U_EMAIL, U_PROFILEIMG, U_BDAY
+FROM MUSER
+WHERE U_ID  =  #{u_id}
+</select>
+
+
+
+<select id="idCheck" parameterType="com.movie.user.domain.UserDTO" resultType="int">
+
+SELECT COUNT(U_ID)
+FROM MUSER
+WHERE U_ID  =  #{u_id}
+
+
+</select>
+
+<select id="emailCheck" parameterType="com.movie.user.domain.UserDTO" resultType="int">
+
+SELECT COUNT (U_EMAIL)
+FROM MUSER
+WHERE U_EMAIL  =  #{u_email}
+
+</select>
+
+<select id="nickCheck" parameterType="com.movie.user.domain.UserDTO" resultType="int">
+
+SELECT COUNT (U_NICKNAME)
+FROM MUSER
+WHERE U_NICKNAME  =  #{u_nickname}
+
+</select>
+
+<insert id="Join">
+
+INSERT INTO MUSER(U_NO, U_ID,U_PW, U_NAME, U_NICKNAME, U_EMAIL,U_BDAY)
+VALUES(
+(SELECT NVL(MAX(U_NO),0)+1 FROM MUSER),
+#{u_id},
+#{u_pw},
+#{u_name},
+#{u_nickname},
+#{u_email},
+#{u_bday}
+
+)
+
+
+</insert>
+
+<update id="keepLogin">
+
+UPDATE MUSER
+SET SESSIONKEY  =  #{sessionKey},
+    SESSIONLIMIT  =  #{sessionLimit}
+WHERE U_ID  =  #{u_id}
+
+</update>
+
+<select id="cookie" parameterType="String">
+
+SELECT SESSIONKEY
+FROM MUSER
+WHERE SESSIONKEY  =  #{cookie}
+
+</select>
+
+
+<select id="checkSessionKey" resultType="com.movie.user.domain.UserDTO">
+
+SELECT * FROM MUSER
+WHERE SESSIONKEY  =  #{sessionKey}
+AND   SESSIONLIMIT  > now()
+
+</select>
+
+<select id="cookieVo" resultType="com.movie.user.domain.UserDTO">
+
+SELECT * 
+FROM MUSER
+WHERE SESSIONKEY  =  #{cookie}
+
+</select>
+
+<select id="findId" resultType="String">
+
+SELECT U_ID
+FROM MUSER
+WHERE U_EMAIL  =  #{u_email}
+
+
+</select>
+
+<select id="pwEmailCheck" resultType="String">
+
+SELECT 1 RESULT
+FROM DUAL
+WHERE EXISTS (
+SELECT 1
+FROM MUSER
+WHERE U_ID  =  #{u_id}
+AND   U_EMAIL  =  #{u_email}
+)
+
+</select>
+
+<update id="updatePw">
+
+UPDATE MUSER 
+SET U_PW  =  #{u_pw}
+WHERE U_Id  =  #{u_id}
+
+</update>
+
+<update id="LogOut">
+
+UPDATE MUSER
+SET SESSIONKEY = NULL,
+SESSIONLIMIT = NULL
+WHERE SESSIONKEY  =  #{dbCookie}
+
+</update>
+
+</mapper>

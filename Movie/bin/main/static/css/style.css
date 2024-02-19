@@ -1,0 +1,332 @@
+*{
+  margin:auto;padding:0;
+  list-style: none;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+a{text-decoration:none; color:inherit;}
+body{
+  width:100%;
+  min-height:2000px;
+  background-image: linear-gradient(to top, #434343 0%, #181818 100%);
+  color:white;
+}
+header{
+  width:100%;height:6vh;
+  background-color:#181818;
+}
+.logo{
+  margin-left:3%;
+  width:7%;height:100%;
+  position:relative;
+  float:left;
+}
+.logo img{
+  width:100%; height:100%;
+}
+nav{
+  width:100%;height:8vh;
+  /* transition: background-color 0.3s ease; */
+  background-color:#181818;
+  position:fixed;
+  z-index:99;
+}
+.menu{
+  width:30%;height:100%;
+  float:left; padding-left:20px;
+}
+.menu li{
+  height:100%; padding:1px 10px;
+  float:left; margin-top:20px;
+  text-align:center;
+}
+.menu li:hover{
+  opacity: 0.5;
+  transition:all 0.5s;
+}
+.optionList{
+  width:20%; height:100%;
+  float:right; margin-right:5%;
+  color:white;
+}
+.optionList li{
+  float:right; margin-top:20px;
+  padding:1px 7px;
+}
+.optionList li:hover{
+ opacity: 0.5;
+ transition:all 0.5s;
+}
+.optionList img{
+  width:100%; height:100%;
+}
+#slide{
+  width:100%; height:90vh;
+  position:relative;
+}
+.slideimg{
+  width:100%; height:100%;
+  /* padding-left:10%; */
+  /* position:relative; */
+}
+.slideimg .image-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.slideimg .image-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  position: absolute;
+  display: none;
+  /* transition: display 1s ease-in-out; */
+  animation: fadeInOut 7s ease-in-out forwards;
+  z-index: 1;
+}
+@keyframes fadeInOut { /* 추가된 부분 */
+   0% {
+     opacity: 0;
+   }
+   50% {
+     opacity: 0.5;
+   }
+   100% {
+     opacity: 0;
+   }
+ }
+.slideimg .image-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(20, 20, 20, 0.25) 10%,
+    rgba(20, 20, 20, 0.5) 25%,
+    rgba(20, 20, 20, 0.75) 50%,
+    rgba(20, 20, 20, 1) 75%,
+    rgba(20, 20, 20, 1) 100%
+  );
+  z-index:2;
+}
+.Slidefont{
+  position:absolute; z-index:98;
+  width:50%;
+  padding:10%;
+  /* background-color:red; */
+  overflow: hidden;
+  text-align:center;
+  max-width: 600px; /* 원하는 최대 너비로 조절하세요 */
+  height: auto; /* 높이를 자동으로 조절합니다 */
+  top: 50%; /* 수직 중앙 정렬을 위한 top 값 설정 */
+  left: 50%; /* 수평 중앙 정렬을 위한 left 값 설정 */
+  transform: translate(-50%, -50%); /* 중앙 정렬을 위한 transform 설정 */
+}
+.Slidefont h1 {
+  display: none;
+  transition: opacity 1s ease-in-out;
+}
+
+.Slidefont h1.active {
+  display: block;
+  opacity: 1;
+  animation: fadeInOut 7s ease-in-out forwards;
+}
+.content-wrapper {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   z-index: 2;
+ }
+/* .ship{
+  width:35%;height:110vh;
+  background-color: #282828;
+  margin-top:2%;
+} */
+.shipTitle{
+  width:100%; padding-top:10%;
+  text-align:center;
+  font-size:20px; color:#c8c8c8;
+}
+.shipT2{
+  opacity:0.8;
+}
+.ship2{
+  width:100%; padding:5%;
+}
+.ship li{
+  padding:1%;
+  color:#c8c8c8;
+  opacity:0.8;
+}
+.ship3{
+  background-color:#181818;
+  border:1px solid #181818;
+  font-size:20px;color:#686868;
+  width:70%; height:2vh;
+  padding:3%;
+}
+
+.password-message {
+  color: red;
+  font-size:17px;
+}
+.join{
+  width:90%;height:5vh;
+  border:1px solid#383838;
+  background-color:#383838;
+  font-size:20px;color:#c7c7c7;
+  padding:1%;text-align:center;
+}
+.Shipbtn{
+  width:15%; height:4vh;
+  background-color:#585858;
+  border:1px solid #585858;
+  font-size:17px;
+  padding:1%;
+  margin-left:1%;
+  color:#c8c8c8;
+}
+.Shipbtn1{
+  width:70%; height:6vh;
+  background-color:#4169E1;
+  border:none;
+  font-size:20px;
+  margin-top:3vh;
+  margin-left:1%;
+  color:#c8c8c8;
+  font-weight:bold;
+  cursor:pointer;
+}
+.ship3{
+  background-color:#181818;
+  border:1px solid #181818;
+  font-size:20px;color:#686868;
+  width:70%; height:2vh;
+  padding:3%;
+}
+#imgslide{
+  width:100%;
+  height:1300px;
+ }
+.Slides1,.Slides2,
+.Slides3,.Slides4,
+.Slides5,.Slides6,
+.Slides7{
+  margin-top:2%;
+  width:100%; height:40vh;
+  /* background-color:#000; */
+}
+.SlideMenu1,.SlideMenu2,
+.SlideMenu3,.SlideMenu4,
+.SlideMenu5,.SlideMenu6,
+.SlideMenu7{
+  width:100%; height:32vh;
+  float:left;
+  display: flex;
+  transition: transform 0.4s ease-in-out; 
+  /* opacity:0.8; */
+  position: relative;
+  /* 슬라이드 전환 효과 설정 */
+}
+.SlideMenu1 li,.SlideMenu2 li,
+.SlideMenu3 li,.SlideMenu4 li,
+.SlideMenu5 li,.SlideMenu6 li,
+.SlideMenu7 li{
+  width:11vw; /* 각 이미지가 100% 너비를 가지도록 설정 */
+  height:100%;
+  flex: 0 0 auto; /* flex 설정 */ 
+  float:left; 
+  padding:0.5vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  position:relative;
+}
+.SlideMenu1 li img,.SlideMenu2 li img,
+.SlideMenu3 li img,.SlideMenu4 li img,
+.SlideMenu5 li img,.SlideMenu6 li img,
+.SlideMenu7 li img{
+  width:100%; height:auto;
+  max-height: 100%;
+  object-fit: cover;
+}
+#prevBtn1, #nextBtn1,
+#prevBtn2, #nextBtn2,
+#prevBtn3, #nextBtn3,
+#prevBtn4, #nextBtn4,
+#prevBtn5, #nextBtn5,
+#prevBtn6, #nextBtn6,
+#prevBtn7, #nextBtn7 {
+  width:2%;height:27vh;
+  position:absolute; margin-top:0.5%;
+  padding:1%;
+  font-size: 6em;
+  cursor: pointer;
+  background-color:#111;
+  text-align:center;
+  /* line-height:150%; */
+  z-index:97;
+  opacity:0.3;
+}
+#prevBtn1:hover,
+#nextBtn1:hover{
+  opacity:0.8;
+  font-size: 6.2em;
+  transition:0.4s;
+  cursor:pointer;
+}
+#nextBtn1,#nextBtn2,
+#nextBtn3,#nextBtn4,
+#nextBtn5,#nextBtn6,
+#nextBtn7{
+  float:right;
+  margin-left:96.1%;
+}
+.slideTi{
+  font-size:20px;
+  padding-top:1%;
+  margin-left:1%;
+  cursor:pointer;
+}
+.subcontent1{
+  width:20vw;
+  height:27vh;
+  background-color:black;
+  position:absolute;
+  display:none;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:20px;
+  text-align:center;
+}
+.subcontent1 img{
+  width:100%;
+  height:20%;
+}
+#end{
+  width:100%;
+  height:50px;
+  border:1px solid yellow;
+}
+.every-btn{
+	width:3.5vw;height:3vh;
+	border-radius:20px;
+	background-color:#c8c8c8;
+	border:none;
+	color:#4169E1;
+}
+.every-btn:hover{
+	color:white;font-weight:bolder;
+	background-color:#4169E1;
+}
