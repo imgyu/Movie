@@ -4,12 +4,103 @@
 
 <select id="Poster" resultType="com.movie.domain.MovieDTO">
 
-SELECT M_IMG
-FROM MOVIE
-WHERE M_NO BETWEEN 1 AND 7
-ORDER BY M_NO ASC
+ <![CDATA[
+    SELECT M_IMG,M_NO
+    FROM (
+        SELECT M_IMG, M_NO
+        FROM MOVIE
+        ORDER BY M_VOTE_AVERAGE DESC
+    ) WHERE ROWNUM <= 30
+    ]]>
 
 </select>
+
+<select id="Animation" resultType="com.movie.domain.MovieDTO">
+
+ <![CDATA[
+    SELECT M_IMG, M_NO
+    FROM (
+        SELECT M.M_IMG,M.M_NO
+        FROM MOVIE M LEFT JOIN GENRES GE ON M.M_ID = GE.M_ID
+        WHERE GE.GENRES LIKE '%애니%'
+    ) WHERE ROWNUM <= 50
+    ]]>
+
+</select>
+
+<select id="Rec" resultType="com.movie.domain.MovieDTO">
+
+<![CDATA[
+    SELECT M_IMG, M_NO
+	FROM (
+    SELECT M.M_IMG, M.M_NO,
+    ROW_NUMBER() OVER (PARTITION BY M.M_NO ORDER BY M.M_VOTE_AVERAGE DESC) AS rn
+    FROM MOVIE M 
+    LEFT JOIN GENRES GE ON M.M_ID = GE.M_ID
+    WHERE M.M_NO IN (50,148,166,250,296,335,336,436,168,53,123,299,356,530,85,41,4,358,359,298,285,259,249,170,171)
+	)
+	WHERE RN = 1 AND ROWNUM <= 25
+  ]]>
+
+</select>
+
+<select id="detail" resultType="com.movie.domain.MovieDTO">
+
+SELECT 
+    M.M_NO, 
+    M.M_TITLE, 
+    M.M_IMG, 
+    M.M_RELEASE_DATE, 
+    M.M_VOTE_AVERAGE, 
+    M.M_VOTE_COUNT, 
+    A.PROFILE_PATH, 
+    A.CHARACTER,
+    A.name,
+    LISTAGG(G.GENRES, ', ') WITHIN GROUP (ORDER BY G.GENRES) AS GENRES_INFO
+FROM 
+    MOVIE M 
+LEFT JOIN 
+    ACTOR A ON M.M_ID = A.M_ID
+LEFT JOIN 
+    GENRES G ON M.M_ID = G.M_ID
+WHERE 
+    M.M_NO = #{m_no}
+GROUP BY 
+    M.M_NO, 
+    M.M_TITLE, 
+    M.M_IMG, 
+    M.M_RELEASE_DATE, 
+    M.M_VOTE_AVERAGE, 
+    A.PROFILE_PATH,
+    A.CHARACTER,
+    A.NAME,
+    M.M_VOTE_COUNT
+
+
+</select>
+
+<select id="review" resultType="com.movie.domain.MovieDTO">
+
+SELECT R.R_REVIEW, U.U_NICKNAME, U.U_PROFILEIMG
+FROM MOVIEREVIEW R LEFT JOIN MOVIE M ON R.M_NO = M.M_NO
+     LEFT JOIN MUSER U ON R.U_NO = U.U_NO
+WHERE M.M_NO = #{m_no}
+ORDER BY R.R_NO DESC
+
+
+</select>
+
+<insert id="reviewWrite">
+
+INSERT INTO MOVIEREVIEW(R_NO, R_REVIEW, U_NO, M_NO)
+VALUES(
+(SELECT NVL(MAX(R_NO), 0)+1 FROM MOVIEREVIEW),
+#{r_review},
+#{u_no},
+#{m_no}
+)
+</insert>
+
 
 
 </mapper>

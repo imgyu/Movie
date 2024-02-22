@@ -18,6 +18,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 @MapperScan(value = {"com.movie.mapper"} )
 @MapperScan(value = {"com.movie.user.mapper"} )
 @MapperScan(value = {"com.movie.board.mapper"} )
+@MapperScan(value = {"com.movie.cs.mapper"} )
 public class MovieApplication {
 	
 	
