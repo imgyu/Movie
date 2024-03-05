@@ -447,7 +447,9 @@
         전화 :
         02-455-9903 (평일 09:00 ~ 18:00) /
         이메일 :
-        service@google.com</div>
+        service@google.com
+        <a href="/Cs/List">고객센터</a>
+        </div>
     </footer>
   </body>
   <script>

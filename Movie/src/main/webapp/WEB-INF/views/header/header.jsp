@@ -17,7 +17,6 @@
           <li><a href="main.html">장르</a></li>
           <li><a href="/Board/ListPage?bt_no=1">게시판</a></li>
           <li><a href="/AiPage">찜한 리스트</a></li>
-          <li><a onclick="createChr();">고객 센터</a></li>
         </ul>
         <c:if test="${loginVo eq null and Cookie eq null }">
           <ul class="optionList">

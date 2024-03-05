@@ -5,6 +5,8 @@ package com.movie.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -32,7 +34,7 @@ public class HomeController {
 	private UserMapper  userMapper;
 	
 	@RequestMapping("/")
-	public ModelAndView home(@CookieValue(name = "loginCookie", required = false)String cookie, MovieDTO vo, UserDTO dto) {
+	public ModelAndView home(@CookieValue(name = "loginCookie", required = false)String cookie, MovieDTO vo, UserDTO dto, HttpSession session) {
 		
 		// 로고 뿌리기
 		List<MovieDTO> poster = mapper.Poster(vo);
@@ -47,7 +49,9 @@ public class HomeController {
 			String dbCookie  = userMapper.cookie(cookie); 
 			if ( dbCookie != null && cookie.equals(dbCookie) ) {
 				
+				
 				List<UserDTO> cookieVo  =  userMapper.cookieVo(dbCookie);				
+				session.setAttribute("cookieVo", cookieVo);
 				mv.addObject("Cookie", dbCookie);
 				mv.addObject("cookieVo", cookieVo);
 				

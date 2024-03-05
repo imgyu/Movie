@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(socketHandler, "/chat/{chr_no");
+		registry.addHandler(socketHandler, "/chat/{chr_no}");
 		
 	}
 

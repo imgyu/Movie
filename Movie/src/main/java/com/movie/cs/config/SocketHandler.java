@@ -27,8 +27,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		String no  =  (String) obj.get("chr_no");
 		HashMap<String, Object> map  =  new HashMap<String, Object>();
-		if(map.size() > 0) {
-			for(int i =0; i < map.size(); i++ ) {
+		if(sessionList.size() > 0) {
+			for(int i =0; i < sessionList.size(); i++ ) {
 				String chr_no  =  (String) sessionList.get(i).get("chr_no");
 				if(chr_no.equals(no)) {
 					map  =  sessionList.get(i);

@@ -17,4 +17,5 @@ public class CsMessage {
 	private String chr_opendate;
 	private int u_no;
 	private int c_no;
+	private String u_name;
 }

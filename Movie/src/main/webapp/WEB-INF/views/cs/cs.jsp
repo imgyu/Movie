@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="kr" dir="ltr">
 <head>
@@ -81,72 +82,75 @@
         margin-top:2vh;
     }
   </style>
-  <script>
+</head>
+  <script>	
   var ws;
   
+
+  
   function wsOpen() {
-	  ws  =  new WebSocket("ws://" + location.host + "/chat" + $("#chr_no").val());
+	  ws  =  new WebSocket("ws://" + location.host + "/chat/" + $("#chr_no").val());
 	  wsEvt();
   }
   
+  $(document).ready(function() {
+	  
+	  wsOpen();
+ 	  $("#chattingarea").show();
+  });
+  
   function wsEvt() {
 	  ws.onopen  =  function(data) {
+	 console.log('WebSocket connection opened');
 		  
 	  }
 	  
 	  ws.onmessage  =  function(data) {
-		  var chr_msg  =  data.data
+		  var chr_msg  =  data.data;
 		  if(chr_msg != null && chr_msg.trim() != '') {
 			  var m  =  JSON.parse(chr_msg);
-			  if(m.data  =  "getId") {
-				  var si  =  d.sessionId != null ? d.sessionId : "";
+			  if(m.type  ==  "getId") {
+				  var si  =  m.sessionId != null ? m.sessionId : "";
 				  if(si != '') {
-					  $("#sessionId").val(si);
+					  $("#sessionId").val(si); 
 				  }
-			  } else if(d.type == "message") {
-				  if(m.sessionId == $("#sessionId").val()); {
-					  $(".mearea").append("<div class='metitle'>YOU</div><div class='me' id='message'>" + d.chr_msg + "</div>");
+			  } else if(m.type == "message") {
+				  if(m.sessionId == $("#sessionId").val()) {
+					  $("#me123").append("<div class='metitle'>You</div><div class='me' id='message'>" + m.chr_msg + "</div>");
 				  } else {
-					  $(".aiarea").append("<div class='Aititle'>상담사</div><div class='Ai' id='aiResponse'>" + d.chr_msg + "</div>");
+					  $(".aiarea").append("<div class='Aititle'>상담사</div><div class='Ai' id='aiResponse'>" + m.chr_msg + "</div>");
 				  }
 			  } else {
-				  console.warn("unknown type!")
+				  console.warn("unknown type!");
 			  }
 		  }
-	  }
+	  }	  
 	  document.addEventListener("keypress", function(e) {
-		  if(e.keyCode  =  13) {
+		  if(e.which  ==  13) {
 			  send();
 		  }
 	  });
   }
   
   function send() {
-	  var u_no;
-	   if ('${loginVo.u_no}' != null ) {
-			u_no  =  '${loginVo.u_no}';
-		} else {
-			u_no  =  '${cookieVo_u_no}';
-		}
+	   
 	  var option = {
 			  type : "message",
-			  chr_no : $("#chr_no").val();
+			  chr_no : $("#chr_no").val(),
 	  		  sessionId : $("#sessionId").val(),
 	  		  chr_msg : $("#messageInput").val(),
-	  		  u_no : u_no
+	  		  u_no : '${loginVo.u_no}'
 	  }
 	  saveMessageToDB(option);
+	  
 	  ws.send(JSON.stringify(option))
-	  $("#messageInput").val();
+	  $("#messageInput").val("");
   }
-  $(document).ready(function() {
-	  wsOpen();
- 	  $("#chattingarea").show();
-  });
+
   
-  function savemessageToDB(option) {
+  function saveMessageToDB(option) {
 	  $.ajax({
-		  url : "/Cs/SaveMessageToDB",
+		  url : "/Cs/SaveMessage",
 		  method : "POST",
 		  data : JSON.stringify(option),
 		  contentType : "application/json",
@@ -160,25 +164,45 @@
   }
   
   </script>
-</head>
 <body>
 <%@include file="/WEB-INF/views/header/header.jsp" %>
+<input type="hidden" id="chr_no" value="${chr_no }">
+  
+            <input type="hidden" id="sessionId" value="${loginVo.u_no }">
+            
     <div id="area1">
         <div id="chatarea">
+          
             <div class="chatlog">
+            <c:forEach var="msg" items="${msgList}">
+            
+             <c:choose>
+             <c:when test="${msg.u_no ne loginVo.u_no}">
             <div class="aiarea">
                 <div class="Aititle">상담사</div>
-                <div class="Ai" id="aiResponse">관리자 답변 까지 시간이 걸릴 수 있습니다. </div>
+                <div class="Ai" id="aiResponse">${msg.chr_msg } </div>
             </div>
-            <div class="mearea">
+            <div class="mearea" id="me123">
+            </div>
+            </c:when>
+            <c:otherwise>
+            <div class="mearea" id="me123">
                 <div class="metitle">You</div>
-                <div class="me" id="message"></div>
+                <div class="me" id="message">${msg.chr_msg }</div>
             </div>
+            </c:otherwise>
+            </c:choose>
+            
+            
+            
+            
+            </c:forEach>
             </div>
+            
             <div class="chattingarea">
                 
                     <input type="text" id="messageInput" name="" placeholder="원하시는 질문을 적어주세요." class="chat">
-                    <button id="sendBtn" class="sendbtn" type="button">send</button>
+                    <button id="sendBtn" class="sendbtn" type="button" onclick="send()">send</button>
                 
             </div>
         </div>
